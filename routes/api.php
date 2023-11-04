@@ -17,3 +17,14 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::group([
+    'middleware' => config('fortify.middleware', ['web'])
+],function (){
+    //Authenticated route
+    Route::group([
+        'middleware' => [config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')]
+    ], function (){
+        Route::get('/donors', [\App\Http\Controllers\DonorController::class, 'index']);
+        Route::post('/donors', [\App\Http\Controllers\DonorController::class, 'store']);
+    });
+});
