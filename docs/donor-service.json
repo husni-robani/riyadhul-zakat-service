@@ -1,0 +1,197 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Donor Api",
+        "description": "Donor Api",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/donors": {
+            "get": {
+                "description": "Get All Donor",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "header",
+                        "description": "for security againts CSRF attacks",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Get all donor success",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "all donor": {
+                                        "description": "getting all donors",
+                                        "value": {
+                                            "data": {
+                                                "name": "Husni Robani",
+                                                "house_number": "B12",
+                                                "total_muzaki": 4,
+                                                "email": "husnir2005@gmail.com",
+                                                "phone": null
+                                            }
+                                        }
+                                    }
+                                },
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "house_number": {
+                                                    "type": "string"
+                                                },
+                                                "total_muzaki": {
+                                                    "type": "number"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "phone": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Add new donor",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "header",
+                        "description": "for security againts CSRF attacks",
+                        "required": true
+                    }
+
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "example": {
+                                "name": "John Doe",
+                                "house_number": "B22",
+                                "total_muzaki": 1,
+                                "email": "john@example.com",
+                                "phone": "0831293782373"
+                            },
+                            "schema": {
+                                "required": ["name", "house_number", "total_muzaki"],
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "house_number": {
+                                        "type": "string"
+                                    },
+                                    "total_muzaki": {
+                                        "type": "number"
+                                    },
+                                    "emial": {
+                                        "type": "string"
+                                    },
+                                    "phone": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "",
+                        "content": {
+                            "application/json": {
+                                "example": {
+                                    "data": {
+                                        "name" : "john doe",
+                                        "house_number": "C405",
+                                        "total_muzaki": 3,
+                                        "email": "john@example.com",
+                                        "phone": null
+                                    }
+                                },
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "name": {
+                                                    "type": "string"
+                                                },
+                                                "house_number": {
+                                                    "type": "string"
+                                                },
+                                                "total_muzaki": {
+                                                    "type": "number"
+                                                },
+                                                "email": {
+                                                    "type": "string"
+                                                },
+                                                "phone": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Add donor failed",
+                        "content": {
+                            "application/json": {
+                                "examples": {
+                                    "name field required": {
+                                        "description": "required attribute (name, house_number, total_muzaki) is null",
+                                        "value": {
+                                            "message": "The name field is required",
+                                            "errors": {
+                                                "name": [
+                                                    "The name field is required"
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "invalid email address": {
+                                        "description": "email should be valid email format",
+                                        "value": {
+                                            "message": "the email field must be a valid email address",
+                                            "errors": {
+                                                "email": [
+                                                    "The email field must be a valid email address"
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
