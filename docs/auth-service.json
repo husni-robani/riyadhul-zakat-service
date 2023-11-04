@@ -1,0 +1,95 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Authentication API",
+        "description": "Authentication API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8080"
+        }
+    ],
+    "paths": {
+        "/api/login": {
+            "post": {
+                "description": "Login User",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "header",
+                        "description": "for security againts CSRF attacks",
+                        "required": true
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "examples": {
+                                "test": {
+                                    "description": "login user test",
+                                    "value": {
+                                        "email": "test@example.com",
+                                        "password": "password"
+                                    }
+                                }
+                            },
+                            "schema": {
+                                "required": ["password", "email"],
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "two-factor": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/logout": {
+            "post": {
+                "description": "Logout",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Logout success"
+                    }
+                }
+            }
+        }
+    }
+}
