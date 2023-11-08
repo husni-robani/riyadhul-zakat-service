@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DonorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,7 +25,10 @@ Route::group([
     Route::group([
         'middleware' => [config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')]
     ], function (){
-        Route::get('/donors', [\App\Http\Controllers\DonorController::class, 'index']);
-        Route::post('/donors', [\App\Http\Controllers\DonorController::class, 'store']);
+        Route::get('/donors', [DonorController::class, 'index']);
+        Route::post('/donors', [DonorController::class, 'store']);
+        Route::get('/donors/{donorId}', [DonorController::class, 'show']);
+        Route::put('/donors/{donorId}', [DonorController::class, 'update']);
+        Route::delete('/donors/{donorId}', [DonorController::class, 'destroy']);
     });
 });
