@@ -32,6 +32,7 @@ Route::group([
         Route::get('/donors/{donorId}', [DonorController::class, 'show']);
         Route::put('/donors/{donorId}', [DonorController::class, 'update']);
         Route::delete('/donors/{donorId}', [DonorController::class, 'destroy']);
+        Route::post('donors/{donorId}/transactions/{transactionId}/approve', [DonorController::class, 'transactionStatusApprove']);
 
         //transactions service
         Route::post('/transactions', [TransactionController::class, 'store']);
