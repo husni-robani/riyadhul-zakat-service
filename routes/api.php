@@ -35,5 +35,6 @@ Route::group([
 
         //transactions service
         Route::post('/transactions', [TransactionController::class, 'store']);
+        Route::get('/transactions', [TransactionController::class, 'index']);
     });
 });
