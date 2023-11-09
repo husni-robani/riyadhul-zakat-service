@@ -27,13 +27,13 @@ class StoreTransactionRequest extends FormRequest
         return [
             'donors_id' => 'required|integer',
             'donation_type' => [
-                'required', Rule::in([DonationType::Fitrah, DonationType::Sodaqah, DonationType::Mal, DonationType::Infaq])
+                'required', Rule::in([DonationType::Fitrah, DonationType::Sodaqah, DonationType::Mal, DonationType::Infaq]),
             ],
             'payment_method' => [
-                'required', Rule::in([PaymentMethod::Cash, PaymentMethod::Transfer])
+                'required', Rule::in([PaymentMethod::Cash, PaymentMethod::Transfer]),
             ],
             'total_money' => 'nullable|numeric|between:0,999999999999.99',
-            'total_good' => 'nullable|integer'
+            'total_good' => 'nullable|integer',
         ];
     }
 }

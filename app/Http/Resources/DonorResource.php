@@ -19,7 +19,7 @@ class DonorResource extends JsonResource
             'house_number' => $this->house_number,
             'total_muzaki' => $this->total_muzaki,
             'email' => $this->email,
-            'phone' => $this->phone
+            'phone' => $this->phone,
         ];
     }
 }
