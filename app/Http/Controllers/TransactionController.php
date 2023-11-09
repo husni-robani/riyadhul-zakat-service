@@ -50,4 +50,19 @@ class TransactionController extends Controller
             ], $statusCode);
         }
     }
+
+    public function getDonorTransactions(Request $request, $donorId){
+        try {
+            $donor = Donor::findOrFail($donorId);
+            return [
+                "data" => [
+                    "donor_transactions" => TransactionResource::collection($donor->transactions->all())
+                ]
+            ];
+        }catch (ModelNotFoundException | \Exception $exception){
+            return response()->json([
+                "errors" => $exception->getMessage()
+            ]);
+        }
+    }
 }
