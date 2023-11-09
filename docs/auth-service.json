@@ -11,17 +11,9 @@
         }
     ],
     "paths": {
-        "/api/login": {
+        "/api/auth/login": {
             "post": {
                 "description": "Login User",
-                "parameters": [
-                    {
-                        "name": "X-XSRF-TOKEN",
-                        "in": "header",
-                        "description": "for security againts CSRF attacks",
-                        "required": true
-                    }
-                ],
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -54,13 +46,42 @@
                         "description": "Login Success",
                         "content": {
                             "application/json": {
+                                "example": {
+                                    "success": true,
+                                    "data": {
+                                        "user": {
+                                            "name": "test",
+                                            "email": "test@example.com",
+                                            "access_token": "5|1Zx8SC8PhS4zaB8eikrdFmFoK8z5Y5jCU2fCC5dx839b5258"
+                                        }
+                                    }
+                                },
                                 "schema": {
                                     "properties": {
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "two-factor": {
+                                                "success" : {
                                                     "type": "boolean"
+                                                },
+                                                "data" : {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "user": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "name": {
+                                                                    "type": "string"
+                                                                },
+                                                                "email": {
+                                                                    "type": "string"
+                                                                },
+                                                                "access_token": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        }
+                                                    }
                                                 }
                                             }
                                         },
@@ -75,13 +96,18 @@
                 }
             }
         },
-        "/api/logout": {
+        "/api/auth/logout": {
             "post": {
                 "description": "Logout",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
-                        "in": "header"
+                        "name": "Authorization",
+                        "description": "put on bearer token",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
