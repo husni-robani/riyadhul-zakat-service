@@ -1,0 +1,137 @@
+{
+    "openapi": "3.0.3",
+    "info": {
+        "title": "Transaction API",
+        "description": "Transaction API",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://localhost:8000"
+        }
+    ],
+    "paths": {
+        "/api/transactions": {
+            "post": {
+                "description": "create new transaction",
+                "parameters": [
+                    {
+                        "name": "X-XSRF-TOKEN",
+                        "in": "header",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "required": ["donors_id", "donation_type", "payment_method", "status"],
+                                "properties": {
+                                    "donors_id": {
+                                        "type": "string"
+                                    },
+                                    "donation_type": {
+                                        "type": "string",
+                                        "enum": ["fitrah", "mal", "infaq", "sodaqah"]
+                                    },
+                                    "payment_method": {
+                                        "type": "string",
+                                        "enum": ["cash", "transfer"]
+                                    },
+                                    "total_money": {
+                                        "type": "number",
+                                        "maximum": 15,
+                                        "nullable": true
+                                    },
+                                    "total_good": {
+                                        "type": "number",
+                                        "nullable": true
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "create new transaction successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "donor_name": {
+                                                    "type": "string"
+                                                },
+                                                "donation_type": {
+                                                    "type": "string"
+                                                },
+                                                "payment_method": {
+                                                    "type": "string"
+                                                },
+                                                "total_money": {
+                                                    "type": "number",
+                                                    "nullable": true,
+                                                    "format": "decimal, with two digit after comma"
+                                                },
+                                                "total_good": {
+                                                    "type": "number"
+                                                },
+                                                "status": {
+                                                    "type": "boolean"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "example": {
+
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "donor not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation invalid",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
