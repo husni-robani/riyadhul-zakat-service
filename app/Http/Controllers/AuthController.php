@@ -3,63 +3,76 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\LoginRequest;
-use App\Models\User;
-use Illuminate\Auth\AuthenticationException;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Illuminate\Http\Request;
+use App\Traits\ApiResponse;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Response as StatusCode;
 
 class AuthController extends Controller
 {
-    //todo : create logic that user has been authenticated cannot login for the second time
-    //todo : change the response success
-    //todo : change all the parameter authenticated api documentation with bearer token
+    use ApiResponse;
+
+    /**
+     * Handle an authentication attempt.
+     *
+     * @return JsonResponse
+     */
     public function login(LoginRequest $request)
     {
-        try {
-            $cred = $request->only(['email', 'password']);
-            if (! Auth::attempt($cred)) {
-                throw new AuthenticationException('field doesnt match with record');
-            }
-            $user = User::where('email', $request->get('email'))->first();
-
-            $token = $user->createToken($user->email)->plainTextToken;
-
-            return response([
-                'success' => true,
-                'data' => [
-                    'user' => [
-                        'name' => $user->value('name'),
-                        'email' => $user->value('email'),
-                        'access_token' => $token,
-                    ],
-                ],
-            ]);
-
-        } catch (ModelNotFoundException|AuthenticationException|\Exception $exception) {
-            return response()->json([
-                'errors' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ]);
+        if (!Auth::attempt($request->validated())) {
+            throw new HttpResponseException(
+                $this->responseFailed(
+                    'Credentials not match',
+                    Response::HTTP_UNAUTHORIZED,
+                    null
+                )
+            );
         }
+
+        $token = Auth::user()->createToken('authToken')->plainTextToken;
+
+        return $this->responseSuccess(
+            'User login successfully',
+            StatusCode::HTTP_OK,
+            [
+                'user' => [
+                    'name' => Auth::user()->name,
+                    'email' => Auth::user()->email,
+                    'access_token' => $token,
+                ],
+            ]
+        );
     }
 
-    public function logout(Request $request)
+    /**
+     * Handle logout request.
+     *
+     * @return JsonResponse
+     */
+    public function logout()
     {
-        try {
-            auth()->user()->tokens()->delete();
+        Auth::user()->tokens()->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'user logout',
-            ]);
-        } catch (AuthenticationException|\Exception $exception) {
-            return response()->json([
-                'errors' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ]);
-        }
+        return $this->responseSuccess(
+            'User logout successfully',
+            StatusCode::HTTP_OK,
+            null
+        );
+    }
+
+    /**
+     * Handle get user profile request.
+     *
+     * @return JsonResponse
+     */
+    public function userProfile()
+    {
+        return $this->responseSuccess(
+            'Success get user profile',
+            StatusCode::HTTP_OK,
+            Auth::user()
+        );
     }
 }
