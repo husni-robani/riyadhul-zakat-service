@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\DonorController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,10 +26,17 @@ Route::group([
     Route::group([
         'middleware' => [config('fortify.auth_middleware', 'auth').':'.config('fortify.guard')]
     ], function (){
+        //donors service
         Route::get('/donors', [DonorController::class, 'index']);
         Route::post('/donors', [DonorController::class, 'store']);
         Route::get('/donors/{donorId}', [DonorController::class, 'show']);
         Route::put('/donors/{donorId}', [DonorController::class, 'update']);
         Route::delete('/donors/{donorId}', [DonorController::class, 'destroy']);
+        Route::post('donors/{donorId}/transactions/{transactionId}/approve', [DonorController::class, 'transactionStatusApprove']);
+
+        //transactions service
+        Route::post('/transactions', [TransactionController::class, 'store']);
+        Route::get('/transactions', [TransactionController::class, 'index']);
+        Route::get('/transactions/{donorId}', [TransactionController::class, 'getDonorTransactions']);
     });
 });
