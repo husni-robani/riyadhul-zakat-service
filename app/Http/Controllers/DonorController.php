@@ -85,4 +85,17 @@ class DonorController extends Controller
         }
     }
 
+    public function transactionStatusApprove(Request $request, $donorId, $transactionId){
+        try {
+            $donor = Donor::findOrFail($donorId);
+            $transaction = $donor->transactions()->findOrFail($transactionId);
+            $transaction->setAttribute('status', true);
+            $transaction->save();
+            return response()->json('', 204);
+        }catch (ModelNotFoundException | Exception $exception){
+            return response()->json([
+                "errors" => $exception->getMessage()
+            ], 400);
+        }
+    }
 }
