@@ -16,14 +16,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/auth/login', [AuthController::class, 'login']);
+Route::prefix('auth')->group(function () {
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/user', [AuthController::class, 'userProfile'])->middleware('auth:sanctum');
+});
 
-Route::group([
-    'middleware' => ['auth:sanctum'],
-], function () {
-    Route::post('/auth/logout', [AuthController::class, 'logout']);
-
-    //donors service
+Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/donors', [DonorController::class, 'index']);
     Route::post('/donors', [DonorController::class, 'store']);
     Route::get('/donors/{donorId}', [DonorController::class, 'show']);
@@ -31,7 +30,6 @@ Route::group([
     Route::delete('/donors/{donorId}', [DonorController::class, 'destroy']);
     Route::post('donors/{donorId}/transactions/{transactionId}/approve', [DonorController::class, 'transactionStatusApprove']);
 
-    //transactions service
     Route::post('/transactions', [TransactionController::class, 'store']);
     Route::get('/transactions', [TransactionController::class, 'index']);
     Route::get('/transactions/{donorId}', [TransactionController::class, 'getDonorTransactions']);
