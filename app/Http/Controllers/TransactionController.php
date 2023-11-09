@@ -5,12 +5,28 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Resources\TransactionResource;
 use App\Models\Donor;
+use App\Models\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Nette\Schema\ValidationException;
 
 class TransactionController extends Controller
 {
+    public function index(Request $request){
+        try {
+            $transactions = Transaction::all();
+            return response()->json([
+                "message" => "get all transaction success",
+                "data" => [
+                    "transactions" => TransactionResource::collection($transactions)
+                ]
+            ], 200);
+        }catch (\Exception $exception){
+            return response()->json([
+                "errors" => $exception->getMessage()
+            ], 400);
+        }
+    }
     public function store(StoreTransactionRequest $request){
         try{
             $donor = Donor::findOrFail($request->get("donors_id"));
