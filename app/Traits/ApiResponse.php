@@ -8,11 +8,6 @@ trait ApiResponse
 {
     /**
      * Api response success
-     *
-     * @param string $message
-     * @param int $statusCode
-     * @param mixed $data
-     * @return JsonResponse
      */
     public function responseSuccess(string $message, int $statusCode, mixed $data): JsonResponse
     {
@@ -25,11 +20,6 @@ trait ApiResponse
 
     /**
      * Api response failed
-     *
-     * @param string $message
-     * @param int $statusCode
-     * @param mixed $error
-     * @return JsonResponse
      */
     public function responseFailed(string $message, int $statusCode, mixed $error): JsonResponse
     {

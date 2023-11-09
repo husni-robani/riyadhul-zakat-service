@@ -26,7 +26,7 @@ class StoreDonorRequest extends FormRequest
             'house_number' => 'required|string',
             'total_muzaki' => 'numeric',
             'email' => $this->input('email') !== null ? 'email' : '',
-            'phone' => $this->input('phone') !== null ? 'string' : ''
+            'phone' => $this->input('phone') !== null ? 'string' : '',
         ];
     }
 }

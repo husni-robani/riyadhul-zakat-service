@@ -22,11 +22,11 @@ class UpdateDonorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "string",
-            "house_number" => "string",
-            "total_muzaki" => "integer",
-            "email" => "email",
-            "phone" => "string"
+            'name' => 'string',
+            'house_number' => 'string',
+            'total_muzaki' => 'integer',
+            'email' => 'email',
+            'phone' => 'string',
         ];
     }
 }
