@@ -1,121 +1,279 @@
 {
-    "openapi": "3.0.3",
-    "info": {
-        "title": "Authentication API",
-        "description": "Authentication API",
-        "version": "1.0.0"
-    },
-    "servers": [
-        {
-            "url": "http://localhost:8080"
-        }
-    ],
-    "paths": {
-        "/api/auth/login": {
-            "post": {
-                "description": "Login User",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "examples": {
-                                "test": {
-                                    "description": "login user test",
-                                    "value": {
-                                        "email": "test@example.com",
-                                        "password": "password"
-                                    }
-                                }
-                            },
-                            "schema": {
-                                "required": ["password", "email"],
-                                "type": "object",
-                                "properties": {
-                                    "email": {
-                                        "type": "string"
-                                    },
-                                    "password": {
-                                        "type": "string"
-                                    }
-                                }
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "200": {
-                        "description": "Login Success",
-                        "content": {
-                            "application/json": {
-                                "example": {
-                                    "success": true,
-                                    "data": {
-                                        "user": {
-                                            "name": "test",
-                                            "email": "test@example.com",
-                                            "access_token": "5|1Zx8SC8PhS4zaB8eikrdFmFoK8z5Y5jCU2fCC5dx839b5258"
-                                        }
-                                    }
-                                },
-                                "schema": {
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "properties": {
-                                                "success" : {
-                                                    "type": "boolean"
-                                                },
-                                                "data" : {
-                                                    "type": "object",
-                                                    "properties": {
-                                                        "user": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "name": {
-                                                                    "type": "string"
-                                                                },
-                                                                "email": {
-                                                                    "type": "string"
-                                                                },
-                                                                "access_token": {
-                                                                    "type": "string"
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "errors": {
-                                            "type": "object"
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        "/api/auth/logout": {
-            "post": {
-                "description": "Logout",
-                "parameters": [
-                    {
-                        "name": "Authorization",
-                        "description": "put on bearer token",
-                        "in": "header",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": "Logout success"
-                    }
-                }
-            }
-        }
+  "openapi": "3.0.3",
+  "info": {
+    "title": "PKM DKM Service - Auth Module",
+    "description": "PKM DKM Service - Auth Module",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Local Server"
     }
+  ],
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login",
+        "description": "Authenticates a user and returns a token",
+        "operationId": "login",
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "examples": {
+                "Success": {
+                  "description": "Example of a successful login, for a request body with email and password",
+                  "value": {
+                    "email": "test@example.com",
+                    "password": "password"
+                  },
+                  "summary": "Success"
+                },
+                "Error 1": {
+                  "description": "Example of a failed login, because password is not provided in the request body",
+                  "value": {
+                    "email": "test@example.com"
+                  },
+                  "summary": "Failed #1"
+                },
+                "Error 2": {
+                  "description": "Example of a failed login, because email is not provided in the request body",
+                  "value": {
+                    "password": "password"
+                  },
+                  "summary": "Failed #2"
+                },
+                "Error 3": {
+                  "description": "Example of a failed login, because email is not found in the database",
+                  "value": {
+                    "email": "test@example.com",
+                    "password": "wrongpassword"
+                  },
+                  "summary": "Failed #3"
+                }
+              },
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successfully and return user info and token",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success": {
+                    "description": "Example of a successful login, for a request body with email and password",
+                    "value": {
+                      "status": "success",
+                      "message": "Login successfully",
+                      "data": {
+                        "user": {
+                          "id": 1,
+                          "name": "Test User",
+                          "email": "test@example.com",
+                          "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9"
+                        }
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Login failed because of validation error",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Error 1": {
+                    "description": "Example of a failed login, because password is not provided in the request body",
+                    "value": {
+                      "status": "error",
+                      "message": "Password is required",
+                      "errors": {
+                        "password": [
+                          "Password is required"
+                        ]
+                      }
+                    }
+                  },
+                  "Error 2": {
+                    "description": "Example of a failed login, because email is not provided in the request body",
+                    "value": {
+                      "status": "error",
+                      "message": "Email is required",
+                      "errors": {
+                        "email": [
+                          "Email is required"
+                        ]
+                      }
+                    }
+                  },
+                  "Error 3": {
+                    "description": "Example of a failed login, because email is not found in the database",
+                    "value": {
+                      "status": "error",
+                      "message": "Email not found",
+                      "errors": {
+                        "email": [
+                          "Email not found"
+                        ]
+                      }
+                    }
+                  },
+                  "Error 4": {
+                    "description": "Example of a failed login, because password is incorrect",
+                    "value": {
+                      "status": "error",
+                      "message": "Password is incorrect",
+                      "errors": {
+                        "password": [
+                          "Password is incorrect"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailed"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Login failed because of unauthorized",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Error": {
+                    "description": "Example of a failed login, because password is not provided in the request body",
+                    "value": {
+                      "status": "error",
+                      "message": "Unauthorized",
+                      "errors": null
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseFailed"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logout",
+        "description": "Logout user and revoke token",
+        "operationId": "logout",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "description": "Bearer token",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Logout successfully",
+            "content": {
+              "application/json": {
+                "examples": {
+                  "Success": {
+                    "description": "Example of a successful logout",
+                    "value": {
+                      "status": "success",
+                      "message": "Logout successfully",
+                      "data": null
+                    }
+                  }
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/ResponseSuccess"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/user": {}
+  },
+  "components": {
+    "schemas": {
+      "ResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "ResponseFailed": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "required": true
+          },
+          "password": {
+            "type": "string",
+            "required": true
+          }
+        }
+      }
+    }
+  }
 }
