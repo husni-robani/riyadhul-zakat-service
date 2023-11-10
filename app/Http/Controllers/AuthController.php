@@ -3,10 +3,17 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Resources\UserResource;
+use App\Models\User;
 use App\Traits\ApiResponse;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\UnauthorizedException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Response as StatusCode;
 
@@ -74,5 +81,24 @@ class AuthController extends Controller
             StatusCode::HTTP_OK,
             Auth::user()
         );
+    }
+
+    public function register(RegisterRequest $request){
+        if (!Gate::allows('register-user')){
+            return $this->responseFailed('Unauthorized for this action', 401, [
+                throw new UnauthorizedException("unauthorized")
+            ]);
+        }
+
+        try {
+            $user = User::create($request->only(['name', 'email', 'password']));
+        }catch (QueryException | \Exception $exception){
+            return $this->responseFailed('create user failed', 400, [
+                $exception->getMessage()
+            ]);
+        }
+        return $this->responseSuccess('create user successful', 201, [
+            "user" => new UserResource($user)
+        ]);
     }
 }
