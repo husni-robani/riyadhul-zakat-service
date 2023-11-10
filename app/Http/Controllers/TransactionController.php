@@ -9,24 +9,29 @@ use App\Models\Transaction;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Nette\Schema\ValidationException;
+use App\Traits\ApiResponse;
 
 class TransactionController extends Controller
 {
+    use ApiResponse;
     public function index(Request $request)
     {
         try {
             $transactions = Transaction::all();
 
-            return response()->json([
-                'message' => 'get all transaction success',
-                'data' => [
-                    'transactions' => TransactionResource::collection($transactions),
-                ],
-            ], 200);
+            return $this->responseSuccess(
+                'get all transaction success',
+                200,
+                [
+                    "transactions" => TransactionResource::collection($transactions)
+                ]
+            );
         } catch (\Exception $exception) {
-            return response()->json([
-                'errors' => $exception->getMessage(),
-            ], 400);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                400,
+                $exception->getMessage()
+            );
         }
     }
 
@@ -43,16 +48,21 @@ class TransactionController extends Controller
                 'status' => false,
             ]);
 
-            return response()->json([
-                'message' => 'create new transaction successful',
-                'data' => new TransactionResource($transaction),
-            ]);
+            return $this->responseSuccess(
+                'create new transaction success',
+                201,
+                [
+                    'transaction' => $transaction
+                ]
+            );
         } catch (ModelNotFoundException|\Exception|ValidationException $exception) {
             $statusCode = $exception instanceof ModelNotFoundException ? 404 : ($exception instanceof ValidationException ? 422 : 400);
 
-            return response()->json([
-                'errors' => $exception->getMessage(),
-            ], $statusCode);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                $statusCode,
+                $exception->getMessage()
+            );
         }
     }
 
@@ -61,15 +71,21 @@ class TransactionController extends Controller
         try {
             $donor = Donor::findOrFail($donorId);
 
-            return [
-                'data' => [
-                    'donor_transactions' => TransactionResource::collection($donor->transactions->all()),
-                ],
-            ];
+            return $this->responseSuccess(
+                'get transactions by donor success',
+                200,
+                [
+                    'donor_transactions' => TransactionResource::collection($donor->transactions->all())
+                ]
+            );
         } catch (ModelNotFoundException|\Exception $exception) {
-            return response()->json([
-                'errors' => $exception->getMessage(),
-            ]);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                400,
+                [
+                    $exception->getMessage()
+                ]
+            );
         }
     }
 }
