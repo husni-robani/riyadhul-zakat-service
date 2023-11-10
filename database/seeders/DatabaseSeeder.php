@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             'name' => 'test',
             'email' => 'test@example.com',
             'password' => 'password',
+            'is_admin' => true
         ]);
 
         $husniDonation = Donor::create([
