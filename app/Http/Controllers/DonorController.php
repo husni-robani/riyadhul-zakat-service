@@ -9,17 +9,16 @@ use App\Models\Donor;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
+use App\Traits\ApiResponse;
 
 class DonorController extends Controller
 {
+    use ApiResponse;
     public function index()
     {
-        return response()->json([
-            'message' => 'success to get donors',
-            'data' => [
-                'donors' => DonorResource::collection(Donor::all()),
-            ],
-        ], 200);
+        return $this->responseSuccess('success to get all donor', 200, [
+            "donors" => DonorResource::collection(Donor::all())
+        ]);
     }
 
     public function store(StoreDonorRequest $request)
@@ -28,15 +27,20 @@ class DonorController extends Controller
 
             $donor = Donor::create($request->all());
 
-            return response()->json([
-                'message' => 'create donor successful',
-                'data' => new DonorResource($donor),
-            ], 201);
+            return $this->responseSuccess(
+                'create donor successful',
+                201,
+                new DonorResource($donor)
+            );
 
         } catch (Exception $exception) {
-            return \response()->json([
-                'errors' => $exception->getMessage(),
-            ], 404);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                400,
+                [
+                    $exception->getMessage()
+                ]
+            );
         }
     }
 
@@ -45,16 +49,17 @@ class DonorController extends Controller
         try {
             $donor = Donor::findOrFail($donorId);
 
-            return \response()->json([
-                'message' => 'success get donor',
-                'data' => new DonorResource($donor),
-            ]);
+            return $this->responseSuccess(
+                'get donor success',
+                200,
+                new DonorResource($donor)
+            );
         } catch (ModelNotFoundException|Exception $exception) {
-            return \response()->json([
-                'errors' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ], 404);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                400,
+                $exception->getMessage()
+            );
         }
     }
 
@@ -64,16 +69,17 @@ class DonorController extends Controller
             $donor = Donor::findOrFail($donorId);
             $donor->update($request->all());
 
-            return response()->json([
-                'message' => 'update donor successful',
-                'data' => new DonorResource($donor),
-            ]);
+            return $this->responseSuccess(
+                'update donor success',
+                201,
+                new DonorResource($donor)
+            );
         } catch (ModelNotFoundException|Exception $exception) {
-            return response()->json([
-                'errors' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ], 404);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                400,
+                $exception->getMessage()
+            );
         }
     }
 
@@ -83,15 +89,19 @@ class DonorController extends Controller
             $donor = Donor::findOrFail($donorId);
             $donor->delete();
 
-            return response('', 204);
+            return $this->responseSuccess(
+                'delete donor success',
+                200,
+                ''
+            );
         } catch (ModelNotFoundException|Exception $exception) {
             $statusCode = $exception instanceof ModelNotFoundException ? 404 : 400;
 
-            return response()->json([
-                'errors' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ], $statusCode);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                $statusCode,
+                $exception->getMessage()
+            );
         }
     }
 
@@ -103,11 +113,17 @@ class DonorController extends Controller
             $transaction->setAttribute('status', true);
             $transaction->save();
 
-            return response()->json('', 204);
+            return $this->responseSuccess(
+                'transaction approved',
+                201,
+                ''
+            );
         } catch (ModelNotFoundException|Exception $exception) {
-            return response()->json([
-                'errors' => $exception->getMessage(),
-            ], 400);
+            return $this->responseFailed(
+                $exception->getMessage(),
+                404,
+                ''
+            );
         }
     }
 }
