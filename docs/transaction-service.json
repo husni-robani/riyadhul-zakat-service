@@ -16,7 +16,8 @@
                 "description": "create new transaction",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
+                        "description": "put on bearer token for authentication",
                         "in": "header",
                         "required": true,
                         "schema": {
@@ -64,6 +65,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
@@ -93,9 +97,6 @@
                                             }
                                         }
                                     }
-                                },
-                                "example": {
-
                                 }
                             }
                         }
@@ -107,7 +108,13 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
@@ -122,7 +129,13 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
@@ -136,7 +149,8 @@
                 "description": "get all transaction",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
+                        "description": "put on bearer token for authentication",
                         "in": "header",
                         "required": true,
                         "schema": {
@@ -152,6 +166,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
@@ -175,12 +192,17 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
-                                }
-                            }
+                                }                            }
                         }
                     }
                 }
@@ -191,7 +213,8 @@
                 "description": "get all transaction base on donor",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
+                        "description": "put on bearer token for authentication",
                         "in": "header",
                         "required": true,
                         "schema": {
@@ -215,6 +238,12 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
                                         "data": {
                                             "type": "object",
                                             "properties": {
@@ -235,10 +264,13 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
-                                        "errors": {
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
