@@ -16,9 +16,9 @@
                 "description": "Get All Donor",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
                         "in": "header",
-                        "description": "token that include in session for authentication",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -30,44 +30,39 @@
                         "description": "Get all donor success",
                         "content": {
                             "application/json": {
-                                "examples": {
-                                    "all donor": {
-                                        "description": "getting all donors",
-                                        "value": {
-                                            "data": {
-                                                "name": "Husni Robani",
-                                                "house_number": "B12",
-                                                "total_muzaki": 4,
-                                                "email": "husnir2005@gmail.com",
-                                                "phone": null
-                                            }
-                                        }
-                                    }
-                                },
                                 "schema": {
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "name": {
-                                                    "type": "string"
-                                                },
-                                                "house_number": {
-                                                    "type": "string"
-                                                },
-                                                "total_muzaki": {
-                                                    "type": "number"
-                                                },
-                                                "email": {
-                                                    "type": "string"
-                                                },
-                                                "phone": {
-                                                    "type": "string"
+                                                "donors": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "house_number": {
+                                                            "type": "string"
+                                                        },
+                                                        "total_muzaki": {
+                                                            "type": "number"
+                                                        },
+                                                        "email": {
+                                                            "type": "string"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string"
+                                                        }
+                                                    }
+
                                                 }
                                             }
-                                        },
-                                        "errors": {
-
                                         }
                                     }
                                 }
@@ -80,15 +75,14 @@
                 "description": "Add new donor",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
                         "in": "header",
-                        "description": "for security againts CSRF attacks",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
                         }
                     }
-
                 ],
                 "requestBody": {
                     "content": {
@@ -128,42 +122,39 @@
                         "description": "Create donor successful",
                         "content": {
                             "application/json": {
-                                "example": {
-                                    "message": "create donor successful",
-                                    "data": {
-                                        "name" : "john doe",
-                                        "house_number": "C405",
-                                        "total_muzaki": 3,
-                                        "email": "john@example.com",
-                                        "phone": null
-                                    }
-                                },
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
                                         "data": {
                                             "type": "object",
                                             "properties": {
-                                                "name": {
-                                                    "type": "string"
-                                                },
-                                                "house_number": {
-                                                    "type": "string"
-                                                },
-                                                "total_muzaki": {
-                                                    "type": "number"
-                                                },
-                                                "email": {
-                                                    "type": "string"
-                                                },
-                                                "phone": {
-                                                    "type": "string"
+                                                "donor": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "house_number": {
+                                                            "type": "string"
+                                                        },
+                                                        "total_muzaki": {
+                                                            "type": "number"
+                                                        },
+                                                        "email": {
+                                                            "type": "string"
+                                                        },
+                                                        "phone": {
+                                                            "type": "string"
+                                                        }
+                                                    }
                                                 }
-                                            }
-                                        }
+                                            }                                        }
                                     }
                                 }
                             }
@@ -173,31 +164,20 @@
                         "description": "Add donor failed",
                         "content": {
                             "application/json": {
-                                "examples": {
-                                    "name field required": {
-                                        "description": "required attribute (name, house_number, total_muzaki) is null",
-                                        "value": {
-                                            "message": "The name field is required",
-                                            "errors": {
-                                                "name": [
-                                                    "The name field is required"
-                                                ]
-                                            }
-                                        }
-                                    },
-                                    "invalid email address": {
-                                        "description": "email should be valid email format",
-                                        "value": {
-                                            "message": "the email field must be a valid email address",
-                                            "errors": {
-                                                "email": [
-                                                    "The email field must be a valid email address"
-                                                ]
-                                            }
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
+                                            "type": "object"
                                         }
                                     }
-                                }
-                            }
+                                }                            }
                         }
                     }
                 }
@@ -208,9 +188,9 @@
                 "summary": "get donors by id",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
-                        "description": "token that include in session for authentication",
+                        "name": "Authorization",
                         "in": "header",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -234,6 +214,9 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
@@ -258,8 +241,7 @@
                                                 }
                                             }
                                         }
-                                    }
-                                }
+                                    }                                }
                             }
                         }
                     },
@@ -270,17 +252,17 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string"
-                                                }
-                                            }
+                                        "status": {
+                                            "type": "object"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
+                                            "type": "object"
                                         }
                                     }
-                                }
-                            }
+                                }                            }
                         }
                     }
                 }
@@ -289,9 +271,9 @@
                 "description": "Update donor",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
                         "in": "header",
-                        "description": "token that include in session for authentication",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -344,7 +326,11 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "properties": {
+                                    "type": "object",
+                                    "properties":  {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
@@ -369,8 +355,7 @@
                                                 }
                                             }
                                         }
-                                    }
-                                }
+                                    }                               }
                             }
                         }
                     },
@@ -381,17 +366,17 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string"
-                                                }
-                                            }
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
+                                            "type": "object"
                                         }
                                     }
-                                }
-                            }
+                                }                            }
                         }
                     },
                     "422": {
@@ -401,10 +386,13 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
-                                        "errors": {
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
@@ -420,9 +408,9 @@
                 "description": "deleting donor by id",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
-                        "description": "token that include in session for authentication",
+                        "name": "Authorization",
                         "in": "header",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -439,8 +427,23 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "success to delete donor"
+                    "200": {
+                        "description": "success to delete donor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "Donor not found",
@@ -449,13 +452,14 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
-                                        "errors": {
-                                            "type": "object",
-                                            "properties": {
-                                                "message": {
-                                                    "type": "string"
-                                                }
-                                            }
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "error": {
+                                            "type": "object"
                                         }
                                     }
                                 }
@@ -471,8 +475,9 @@
                 "description": "approving transaction status",
                 "parameters": [
                     {
-                        "name": "X-XSRF-TOKEN",
+                        "name": "Authorization",
                         "in": "header",
+                        "description": "put token on bearer for authentication",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -496,8 +501,23 @@
                     }
                 ],
                 "responses": {
-                    "204": {
-                        "description": "transaction status approved"
+                    "200": {
+                        "description": "transaction status approved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     },
                     "404": {
                         "description": "donor or transaction not found",
@@ -506,15 +526,17 @@
                                 "schema": {
                                     "type": "object",
                                     "properties": {
+                                        "status": {
+                                            "type": "string"
+                                        },
                                         "message": {
                                             "type": "string"
                                         },
-                                        "errors": {
+                                        "error": {
                                             "type": "object"
                                         }
                                     }
-                                }
-                            }
+                                }                            }
                         }
                     }
                 }
