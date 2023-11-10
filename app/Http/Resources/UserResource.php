@@ -14,14 +14,10 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        foreach ($this->tokens as $token) {
-            $tokenValue = $token->plainTextToken;
-        }
 
         return [
             'name' => $this->name,
             'email' => $this->email,
-            'token' => $tokenValue,
         ];
     }
 }
