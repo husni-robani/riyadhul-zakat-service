@@ -18,9 +18,10 @@ class DatabaseSeeder extends Seeder
     {
         User::create([
             'name' => 'test',
-            'email' => 'test@example.com',
-            'password' => 'password',
-            'is_admin' => true
+            'email' => 'husnir2005@gmail.com',
+            'password' => 'password123',
+            'is_admin' => true,
+            'email_verified_at' => now()
         ]);
 
         $husniDonation = Donor::create([

@@ -17,12 +17,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-    Route::get('/user', [AuthController::class, 'userProfile'])->middleware('auth:sanctum');
-    Route::post('/register', [AuthController::class, 'register'])->middleware('auth:sanctum');
-});
+//Route::prefix('auth')->group(function () {
+//    Route::post('/login', [AuthController::class, 'login']);
+//    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+//    Route::get('/user', [AuthController::class, 'userProfile'])->middleware('auth:sanctum');
+//    Route::post('/register', [AuthController::class, 'register'])->middleware('auth:sanctum');
+//});
 
 //Route::middleware(['auth:sanctum'])->group(function () {
 //    Route::get('/donors', [DonorController::class, 'index']);
@@ -36,7 +36,6 @@ Route::prefix('auth')->group(function () {
 //    Route::get('/transactions', [TransactionController::class, 'index']);
 //    Route::get('/transactions/{donorId}', [TransactionController::class, 'getDonorTransactions']);
 //});
-
 
 Route::middleware(['auth:sanctum'])->get('/user', function (Request $request) {
     return $request->user();
